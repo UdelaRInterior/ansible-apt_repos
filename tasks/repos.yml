@@ -1,0 +1,48 @@
+---
+# tasks file for apt_repos
+
+- name: Remove all existing repositories with force-repos tag 
+  block:
+  - name: A task just to show we are removing apt configuration
+    debug:
+      msg: "We are removing existing apt configuration"
+      verbosity: 2
+  
+  - name: remove all files in /etc/apt/sources.list.d/
+    file: 
+      path: /etc/apt/sources.list.d/
+      state: absent
+
+  - name: re-create empty /etc/apt/sources.list.d/
+    file: 
+      path: /etc/apt/sources.list.d/
+      state: directory
+  tags:
+  - never
+  - force-repos
+
+- name: build /etc/apt/source.list from template
+  template:
+    src: sources.list.j2
+    dest: /etc/apt/sources.list
+  register: sources_list
+
+- name: add declared repositories
+  apt_repository:
+    repo: "{{ item.repo }}"
+    filename: "{{ item.filename | default(omit) }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ apt_repositories_extra }}"
+  register: repos_added
+
+- name: add keys for the repositories
+  apt_key:
+    url: "{{ item.key }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ apt_repositories_extra }}"
+  when: item.key is defined
+
+- name: update apt cache
+  apt: 
+    update_cache: yes
+  when: (repos_added is changed) or (sources_list is changed)

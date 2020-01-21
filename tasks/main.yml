@@ -1,0 +1,6 @@
+---
+## apt_repos / management of apt repositories from ansible data_pipeline
+
+- name: Include tasks if we manage repositories
+  include_tasks: repos.yml
+  when: apt_repos_management is defined and apt_repos_management

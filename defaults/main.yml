@@ -1,0 +1,29 @@
+---
+# Defaults file for role apt_repos
+
+## This variable must be 'yes' or true for this role to have effect.  
+apt_repos_management: no
+
+## apt_repositories_sources_list defines the repositories to put in /etc/apt/sources.list
+## the defaults value are defined for debian distribution
+apt_repositories_sources_list:
+- repo: 'deb http://security.debian.org {{ ansible_distribution_release }}/updates main'
+  key: 'https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_version.split(".")[0] }}-security.asc'
+  comment: Debian security updates
+  state: present
+- repo: 'deb http://ftp.debian.org/debian {{ ansible_distribution_release }} main'
+  key: 'https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_version.split(".")[0] }}.asc'
+  comment: Debian main repos
+  state: present
+- repo: 'deb http://ftp.debian.org/debian {{ ansible_distribution_release }}-updates main'
+  key: 'https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_version.split(".")[0] }}.asc'
+  comment: Debian updates repos
+  state: present
+
+## apt_repositories_extra defines the repos that are configured in /etc/apt/sources.list.d
+apt_repositories_extra: []
+## Define this list with: 
+## - repo: 
+##   filename:
+##   state:
+##   key:

@@ -1,0 +1,9 @@
+## Archivo manejado con ansible
+{% for repository in apt_repositories_sources_list %}
+{% if repository.state | default('present') == 'present' %}
+{% if repository.comment is defined %}
+# {{ repository.comment }}
+{% endif %}
+{{ repository.repo }}
+{% endif %}
+{% endfor %}
