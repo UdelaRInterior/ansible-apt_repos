@@ -27,6 +27,13 @@
     dest: /etc/apt/sources.list
   register: sources_list
 
+- name: add keys for the repositories
+  apt_key:
+    url: "{{ item.key }}"
+    state: "{{ item.state | default('present') }}"
+  loop: "{{ apt_repositories_extra }}"
+  when: item.key is defined
+
 - name: add declared repositories
   apt_repository:
     repo: "{{ item.repo }}"
@@ -34,13 +41,6 @@
     state: "{{ item.state | default('present') }}"
   loop: "{{ apt_repositories_extra }}"
   register: repos_added
-
-- name: add keys for the repositories
-  apt_key:
-    url: "{{ item.key }}"
-    state: "{{ item.state | default('present') }}"
-  loop: "{{ apt_repositories_extra }}"
-  when: item.key is defined
 
 - name: update apt cache
   apt: 
