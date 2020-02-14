@@ -6,7 +6,7 @@
   - name: A task just to show we are removing apt configuration
     debug:
       msg: "We are removing existing apt configuration"
-      verbosity: 2
+      verbosity: 0
   
   - name: remove all files in /etc/apt/sources.list.d/
     file: 
@@ -27,12 +27,20 @@
     dest: /etc/apt/sources.list
   register: sources_list
 
-- name: add keys for the repositories
+- name: add keys for the repositories (key URL)
   apt_key:
     url: "{{ item.key }}"
     state: "{{ item.state | default('present') }}"
-  loop: "{{ apt_repositories_extra }}"
   when: item.key is defined
+  loop: "{{ apt_repositories_sources_list + apt_repositories_extra }}"
+
+- name: add keys for the repositories (from keys server)
+  apt_key: 
+    keyserver: "{{ item.keyserver }}"
+    id: "{{ item.key_id }}"
+    state: "{{ item.state | default('present') }}"
+  when: item.key_id is defined and item.keyserver is defined
+  loop: "{{ apt_repositories_sources_list + apt_repositories_extra }}"
 
 - name: add declared repositories
   apt_repository:
