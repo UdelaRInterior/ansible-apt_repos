@@ -4,6 +4,8 @@
 ## This variable must be 'yes' or true for this role to have effect.
 apt_repos_management: no
 
+apt_repos_remove_previous: no
+
 ## apt_repositories_sources_list defines the repositories to put in /etc/apt/sources.list
 ## the defaults value are defined for debian distribution
 apt_repositories_sources_list:

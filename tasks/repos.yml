@@ -17,9 +17,11 @@
     file: 
       path: /etc/apt/sources.list.d/
       state: directory
-  tags:
-  - never
-  - force-repos
+  when: apt_repos_remove_previous 
+  # this didn't work
+  # tags:
+  # - never
+  # - force-repos
 
 - name: build /etc/apt/source.list from template
   template:

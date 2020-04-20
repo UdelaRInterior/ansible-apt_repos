@@ -1,5 +1,9 @@
 # Changelog of apt_repos ansible role
 
+## [v1.2.0](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.2.0)
+
+* manages removal of previous config with a variable, because it didn't work with tags
+
 ## [v1.1.0](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.1.0)
 
 * adds the possibility to add keys with keyserver and id 
