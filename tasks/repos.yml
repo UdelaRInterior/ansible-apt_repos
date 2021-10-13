@@ -29,6 +29,11 @@
     dest: /etc/apt/sources.list
   register: sources_list
 
+- name: install gpg if not
+  apt:
+    name: gpg
+    state: present
+
 - name: add keys for the repositories (key URL)
   apt_key:
     url: "{{ item.key }}"
