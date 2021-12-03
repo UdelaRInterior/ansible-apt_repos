@@ -1,6 +1,12 @@
 ---
 # tasks file for apt_repos
 
+# Not installed in bulleyes pve templates
+- name: install gpg if not
+  apt:
+    name: gpg
+    state: present
+
 - name: Remove all existing repositories with force-repos tag 
   block:
   - name: A task just to show we are removing apt configuration
@@ -27,37 +33,40 @@
   template:
     src: sources.list.j2
     dest: /etc/apt/sources.list
-  register: sources_list
-
-- name: install gpg if not
-  apt:
-    name: gpg
-    state: present
+  register: apt_repositories_sources_list_update
 
 - name: add keys for the repositories (key URL)
   apt_key:
-    url: "{{ item.key }}"
-    state: "{{ item.state | default('present') }}"
-  when: item.key is defined
+    url: "{{ apt_repositories_repo.key }}"
+    state: "{{ apt_repositories_repo.state | default('present') }}"
+  when: apt_repositories_repo.key is defined
   loop: "{{ apt_repositories_sources_list + apt_repositories_extra }}"
+  loop_control:
+    loop_var: apt_repositories_repo
 
 - name: add keys for the repositories (from keys server)
   apt_key: 
-    keyserver: "{{ item.keyserver }}"
-    id: "{{ item.key_id }}"
-    state: "{{ item.state | default('present') }}"
-  when: item.key_id is defined and item.keyserver is defined
+    keyserver: "{{ apt_repositories_repo.keyserver }}"
+    id: "{{ apt_repositories_repoitem.key_id }}"
+    state: "{{ apt_repositories_repo.state | default('present') }}"
+  when: apt_repositories_repo.key_id is defined and apt_repositories_repo.keyserver is defined
   loop: "{{ apt_repositories_sources_list + apt_repositories_extra }}"
+  loop_control:
+    loop_var: apt_repositories_repo
 
 - name: add declared repositories
   apt_repository:
-    repo: "{{ item.repo }}"
-    filename: "{{ item.filename | default(omit) }}"
-    state: "{{ item.state | default('present') }}"
+    repo: "{{ apt_repositories_repo.repo }}"
+    filename: "{{ apt_repositories_repo.filename | default(omit) }}"
+    state: "{{ apt_repositories_repo.state | default('present') }}"
   loop: "{{ apt_repositories_extra }}"
-  register: repos_added
+  loop_control:
+    loop_var: apt_repositories_repo
+  register: apt_repositories_repos_added
 
 - name: update apt cache
   apt: 
     update_cache: yes
-  when: (repos_added is changed) or (sources_list is changed)
+  when: ( apt_repositories_repos_added is changed ) or ( apt_repositories_sources_list_update is changed )
+
+...

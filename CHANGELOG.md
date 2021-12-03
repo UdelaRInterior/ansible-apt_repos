@@ -1,5 +1,13 @@
 # Changelog of apt_repos ansible role
 
+## [v1.2.1](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.2.1)
+
+* Ensure gpg is installed (not present in debian bullseye, at least proxmox templates)
+* Be carefull to your `apt_repositories_sources_list` definition: the `duistrubution field syntax changes for security update. 
+  It is  `bullseye-security` and no longer `buster/updates`, `stretch/updates`, ...
+* Fixing syntax details
+
+
 ## [v1.2.0](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.2.0)
 
 * manages removal of previous config with a variable, because it didn't work with tags

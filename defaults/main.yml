@@ -1,5 +1,5 @@
 ---
-# Defaults file for role apt_repos
+# Defaults variables for role apt_repos
 
 ## This variable must be 'yes' or true for this role to have effect.
 apt_repos_management: no
@@ -30,3 +30,5 @@ apt_repositories_extra: []
 ##   keyserver: keyserver.ubuntu.com
 ##   key_id: 93C4A3FD7BB9C367
 ##   state: present
+
+...
