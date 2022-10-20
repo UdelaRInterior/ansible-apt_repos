@@ -1,2 +1,26 @@
 ---
 # vars file for apt_repos
+
+## Variables for Debian automatic source.list file 
+# /etc/apt/source.list https://wiki.debian.org/SourcesList
+# has changed with debian 11 (bulleye)
+
+apt_repos_debian_url: http://ftp.debian.org/debian
+apt_repos_debian_security_url: http://security.debian.org/debian-security
+apt_repos_debian_components: main  # contrib non-free
+
+apt_repos_debian_key_url: https://ftp-master.debian.org/keys/archive-key-{{ ansible_distribution_major_version }}-security.asc
+
+apt_repos_debian_security_repo_buster: deb {{ apt_repos_security_url }} {{ ansible_distribution_release }}/updates {{ apt_repos_components }}
+apt_repos_debian_security_repo_bullseye: deb {{ apt_repos_url }} {{ ansible_distribution_release }}-security {{ apt_repos_components }}
+
+## Variables for Ubuntu automatic source.list file 
+## 
+
+apt_repos_ubuntu_url: http://archive.ubuntu.com/ubuntu
+apt_repos_ubuntu_security_url: http://security.ubuntu.com/ubuntu
+apt_repos_ubuntu_components: main # universe multiverse restricted partner
+
+apt_repos_ubuntu_key_url: http://archive.ubuntu.com/ubuntu/project/ubuntu-archive-keyring.gpg
+
+...

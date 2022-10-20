@@ -2,11 +2,23 @@
 # tasks file for apt_repos
 
 # Not installed in bulleyes pve templates
-- name: install gpg if not
+- name: Install gpg if not
   apt:
     name: gpg
     state: present
     update_cache: yes
+
+- name: See distribution info
+  debug:
+    var: '{{ item }}'
+    verbosity: 2
+  loop:
+  - ansible_distribution
+  - apt_repos_url
+  - apt_repos_security_url
+  - apt_repos_components
+  - apt_repos_key_url
+  - apt_repositories_sources_list
 
 - name: Remove all existing repositories with force-repos tag 
   block:
@@ -15,7 +27,7 @@
       msg: "We are removing existing apt configuration"
       verbosity: 0
   
-  - name: remove all files in /etc/apt/sources.list.d/
+  - name: Remove all files in /etc/apt/sources.list.d/
     file: 
       path: /etc/apt/sources.list.d/
       state: absent
@@ -30,13 +42,13 @@
   # - never
   # - force-repos
 
-- name: build /etc/apt/source.list from template
+- name: Build /etc/apt/source.list from template
   template:
     src: sources.list.j2
     dest: /etc/apt/sources.list
   register: apt_repositories_sources_list_update
 
-- name: add keys for the repositories (key URL)
+- name: Add keys for the repositories (key URL)
   apt_key:
     url: "{{ apt_repositories_repo.key }}"
     state: "{{ apt_repositories_repo.state | default('present') }}"
@@ -45,7 +57,7 @@
   loop_control:
     loop_var: apt_repositories_repo
 
-- name: add keys for the repositories (from keys server)
+- name: Add keys for the repositories (from keys server)
   apt_key: 
     keyserver: "{{ apt_repositories_repo.keyserver }}"
     id: "{{ apt_repositories_repoitem.key_id }}"
@@ -55,7 +67,7 @@
   loop_control:
     loop_var: apt_repositories_repo
 
-- name: add declared repositories
+- name: Add declared repositories
   apt_repository:
     repo: "{{ apt_repositories_repo.repo }}"
     filename: "{{ apt_repositories_repo.filename | default(omit) }}"
@@ -65,7 +77,7 @@
     loop_var: apt_repositories_repo
   register: apt_repositories_repos_added
 
-- name: update apt cache
+- name: Update apt cache
   apt: 
     update_cache: yes
   when: ( apt_repositories_repos_added is changed ) or ( apt_repositories_sources_list_update is changed )

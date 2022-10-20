@@ -6,12 +6,28 @@ This role configures the repositories defined in main file `/etc/apt/sources.lis
 Requirements
 ------------
 
-This role covers only hosts with a Debian distribution or derivative.
+This role covers only hosts with apt package management, i.e. Debian distribution or derivatives. 
 
 Role Variables
 --------------
 
-To use this role, choose first the list of repositories you want to have in `/etc/apt/sources.list`, and define it in your host variables with:
+To set the host apt repositories, you need to set the flag:
+```
+apt_repos_management: yes
+```
+With this very simple set, for Debian and Ubuntu distributions, detecting with ansible facts the distibution, release and version, the role builds the default apt `sources.list` file, and sets the appropriate gpg repositories keys.
+
+Be careful: any previous content in the `/etc/apt/sources.list` will be overwritten.
+
+For Debian and Ubuntu distributions again, you can tune the standard content of this default file with the following versions: 
+
+`apt_repos_url`: the URL of your own or your preferred mirror repository of your distribution,
+`apt_repos_security_url`: the URL of your own or your preferred mirror repository for security updates of your distribution (not recommended to be changed)
+`apt_repos_components`: the sections or components of your distribution you want to index. A sub-list of `main contrib non-free` for Debian, `main universe multiverse restricted partner` for Ubuntu.
+`apt_repos_key_url`: the URL of the GPG key of the repos 
+
+
+You can also build your own custom `/etc/apt/sources.list` file, overwriting for your host the variable:
 ```
 apt_repositories_sources_list:
 - repo: 'deb http://security.debian.org buster/updates main'
@@ -20,16 +36,9 @@ apt_repositories_sources_list:
   state: present
 - repo: ...
 ```
-`key`, `comment` and `state` are optional, `state` default value is "present".  The `defaults/main.yml` gives an example for the debian.
+`key`, `comment` and `state` are optional, `state` default value is "present".
 
-Once the repos defined, you can tell the role to manage the repos, setting the variables:
-```
-apt_repos_management: yes
-```
-
-Be careful: any previous content in the `/etc/apt/sources.list` will be overwritten.
-
-You can also define extra repositories that will be managed with `apt_repository` ansible module in `/etc/apt/sources.list.d/` folder:
+Finally, you can define extra repositories that will be managed with `apt_repository` ansible module in `/etc/apt/sources.list.d/` folder:
 ```
 apt_repositories_extra:
 - repo: deb http://debian.myrepo.org/ buster main
@@ -59,7 +68,7 @@ If you run on a debian host:
           apt_repos_management: yes
 ```
 
-it will replace the  `/etc/apt/sources.list`  with the repositories defined in default variables
+it will replace the  `/etc/apt/sources.list`  with the repositories for the distribution of each server defined in defaults and variables of this role. 
 
 License
 -------

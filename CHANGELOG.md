@@ -1,5 +1,12 @@
 # Changelog of apt_repos ansible role
 
+## [v1.3.0](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.3.0)
+
+* automation of `apt_repositories_sources_list` (using defaults anda vars) for
+  Debian and Ubuntu distribution
+* introduction of varibales `apt_repos_url`, `apt_repos_security_url`, `apt_repos_components`
+  and `apt_repos_key_url` to tune previous automation of sources.list.
+
 ## [v1.2.1](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.2.1)
 
 * Ensure gpg is installed (not present in debian bullseye, at least proxmox templates)

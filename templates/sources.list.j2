@@ -1,4 +1,5 @@
-## Archivo manejado con ansible
+## Ansible managed archive
+## repositories for {{ inventory_hostname }} / {{ ansible_distribution }}
 {% for repository in apt_repositories_sources_list %}
 {% if repository.state | default('present') == 'present' %}
 {% if repository.comment is defined %}
