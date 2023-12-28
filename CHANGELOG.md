@@ -1,8 +1,10 @@
 # Changelog of apt_repos ansible role
 
+Migration to [`cielito.system` collection](https://galaxy.ansible.com/cielito/system).
+
 ## [v1.3.0](https://github.com/UdelaRInterior/ansible-apt_repos/tree/v1.3.0)
 
-* automation of `apt_repositories_sources_list` (using defaults anda vars) for
+* automation of `apt_repositories_sources_list` (using defaults and vars) for
   Debian and Ubuntu distribution
 * introduction of varibales `apt_repos_url`, `apt_repos_security_url`, `apt_repos_components`
   and `apt_repos_key_url` to tune previous automation of sources.list.
